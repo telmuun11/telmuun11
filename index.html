@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="../../Downloads/Archive/newroom.css">
+<body>
+    <header>
+      <h1>Tug of wars</h1>
+    </header>
+    <div class="flex">
+      <div class="text-area" id="room-input" contenteditable="true"></div>
+      <button onclick="createroom()" style="width: 200px">Create room</button>
+    </div>
+    <ul class="task-list" id="room-list"></ul>
+    <button id="myBtn">Open Modal</button>
+<div id="myModal" class="modal">
+
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>
+
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyBMg_Q4U57FjRwviRMgf5nqTs-1YhtBoQM",
+      authDomain: "tg-of-wars.firebaseapp.com",
+      projectId: "tg-of-wars",
+      storageBucket: "tg-of-wars.appspot.com",
+      messagingSenderId: "1049917927824",
+      appId: "1:1049917927824:web:afd6ef8cf4b95470d18315",
+      measurementId: "G-48FQWWSDEM"
+    };
+    firebase.initializeApp(firebaseConfig);
+  
+  </script>
+<script>
+    const db = firebase.firestore();
+let rooms = document.getElementById("room-list");
+
+db.collection("rooms").onSnapshot((docs) => {
+  rooms.innerHTML = "";
+  docs.forEach((doc) => {
+    let cont = document.createElement("li");
+    let name = document.createElement("h5");
+    name.innerHTML = doc.data().roomName;
+    let players = document.createElement("h5");
+    players.innerHTML = doc.data().players;
+
+    cont.appendChild(name);
+    cont.appendChild(players);
+
+    rooms.appendChild(cont);
+
+    cont.onclick = async () => {
+      let playersNumber = doc.data().players;
+      playersNumber++; 
+      console.log(playersNumber);
+      await db.collection("rooms").doc(doc.id).update({
+        players: playersNumber,
+      });
+      window.location = `daraadbai.html?roomid=${doc.id}`;
+    };
+  });
+});
+const createroom = () => {
+  let roomName = document.getElementById("room-input").innerText;
+  db.collection("rooms").add({
+    roomName: roomName,
+    players: 0,
+    red: 50,
+    blue: 50,
+  });
+  
+};
+
+
+</script>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .control{
+        height: 276px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    #rds{
+        font-size: xx-large;
+        color: red;
+    }
+    #bls{
+        font-size: xx-large;
+        color: blue;
+    }
+    .main{
+        display: flex;
+        flex-direction: row;
+    }
+    .red{
+        width: 50%;
+        height: 500px;
+        background-color: red;
+    }
+    .blue{
+        width: 50%;
+        height:500px;
+        background-color:blue;
+    }
+    button{
+        width: 100px;
+        height: 60px;
+    }
+    .winner{
+        width: 300px;
+        height: 150px;
+        font-size: 50px;
+    }
+</style>
+<body>
+    <div class="control">
+   
+        <div id="rds">15</div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="winner"></div>
+        <input type="number" id="nuuum" >
+        <button onclick="reset()">reset</button>
+        </div>
+        <div id="bls">15</div>
+  </div>
+  <div class="main">
+     
+      <div onclick="bluet()" class="blue"></div>
+  </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+<script>
+    let loc = window.location.href;
+    let url = new URL(loc);
+    let roomid = url.searchParams.get("roomid");
+    let firebaseConfig = {
+    apiKey: "AIzaSyBMg_Q4U57FjRwviRMgf5nqTs-1YhtBoQM",
+    authDomain: "tg-of-wars.firebaseapp.com",
+    projectId: "tg-of-wars",
+    storageBucket: "tg-of-wars.appspot.com",
+    messagingSenderId: "1049917927824",
+    appId: "1:1049917927824:web:afd6ef8cf4b95470d18315",
+    measurementId: "G-48FQWWSDEM"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+    let e;
+    let rp = document.getElementById("rds");
+    let bp = document.getElementById ("bls")
+    let b = document.getElementsByClassName("blue")[0];
+    let r = document.getElementsByClassName("red")[0];
+    let dii = document.getElementsByClassName("winner")[0]
+    let c;
+    db.collection("rooms").doc(roomid).update({
+        bs : 15, 
+        rs : 15
+    })
+
+    // let redScore = 
+    // console.log(typeof rp.innerHTML)
+    function reset(){
+         e=document.getElementById("nuuum").value;
+        console.log(e)
+        rp.innerHTML = e ;
+        bp.innerHTML = e;
+        r.style.width = 50+"%";
+        b.style.width = 50+"%";
+        dii.innerHTML=" ";
+        e.value=" ";
+        db.collection("rooms").doc(roomid).uptade({
+            rs : e,
+            bs : e
+        })
+    }
+    function redt () {
+        let bs;
+        let rs;
+        let bb=document.getElementsByTagName("body")[0].offsetWidth;
+        db.collection("rooms").doc(roomid).get().then((doc)=>{
+           bs =doc.data.bs
+        } );
+        db.collection("rooms").doc(roomid).get().then((doc)=>{
+           rs =doc.data.rs
+        } );
+        rs=db.collection("rooms").doc(roomid).data.rs;
+        rs = Number(rs) + 1 ;
+        bs = Number(bs) - 1 ;
+        rp.innerHTML = rs;
+        bp.innerHTML = bs;
+        c = Number(rs) / (Number(bs) + Number(rs)) * bb;
+        r.style.width = c+"px";
+        b.style.width = bb-Number(c)+"px";
+        if(rs==e*2)
+        {   
+            dii.style.color = "red"
+            dii.innerHTML =" Winner red " 
+        }
+        
+
+        
+
+    }
+    function bluet () {
+        let bb=document.getElementsByTagName("body")[0].offsetWidth;
+      
+        bp.innerHTML = Number(bp.innerHTML) + 1 ;
+      
+        rp.innerHTML = Number(rp.innerHTML) - 1 ;
+        c = Number(bp.innerHTML) / (Number(bp.innerHTML) + Number(rp.innerHTML)) * bb;
+        b.style.width = c+"px";
+        r.style.width = bb-Number(c)+"px";
+      
+        
+            if(bp.innerHTML==e*2)
+        {   
+            console.log("eew")
+            
+            console.log("winner")
+            dii.style.color = "blue"
+            dii.innerHTML = " Winner blue " 
+            x
+        }
+  
+
+       
+    }
+   
+
+    db.collection('users').doc('rSUsfKc0oB5ktVcMxi88').get().then((doc) => {
+        console.log(doc.data().name)
+    })
+    // alert("blue winner")
+</script>
+
+</html>
